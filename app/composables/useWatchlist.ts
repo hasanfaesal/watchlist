@@ -3,6 +3,7 @@ import type { Database } from '~/types/database.types'
 
 export const useWatchlist = () => {
   const supabase = useSupabaseClient<Database>()
+  const user = useSupabaseUser()
 
   const items = useState<WatchlistItem[]>('watchlist-items', () => [])
   const isLoading = useState<boolean>('watchlist-loading', () => false)
@@ -46,13 +47,31 @@ export const useWatchlist = () => {
 
   const addToWatchlist = async (item: WatchlistItemInput) => {
     error.value = null
+    
+    if (!user.value) {
+      error.value = 'User not logged in'
+      return false
+    }
 
     const { error: insertError } = await supabase
       .from('watchlist')
-      .insert(item)
+      .insert({
+        tmdb_id: item.tmdb_id,
+        title: item.title,
+        type: item.type,
+        poster_path: item.poster_path ?? null,
+        year: item.year ?? null,
+        watched_at: item.watched_at,
+        user_id: user.value.sub
+      })
 
     if (insertError) {
-      error.value = insertError.message
+      console.error('Watchlist insert error:', insertError)
+      if (insertError.code === '23505') { // Postgres duplicate key error code
+        error.value = 'This item is already in your watchlist'
+      } else {
+        error.value = insertError.message
+      }
       return false
     }
 

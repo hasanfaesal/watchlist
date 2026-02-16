@@ -8,12 +8,14 @@ const user = useSupabaseUser()
 const route = useRoute()
 const toast = useToast()
 
+// reactive states
 const email = ref('')
 const password = ref('')
 const isSignUpMode = ref(false)
 const isSubmitting = ref(false)
 const isGoogleOAuthLoading = ref(false)
 
+// computed properties
 const redirectTo = computed(() => {
   const value = route.query.redirectTo
   return typeof value === 'string' && value.length > 0 ? value : '/'
@@ -21,9 +23,11 @@ const redirectTo = computed(() => {
 
 const config = useRuntimeConfig()
 
+// TODO: is this the best implementation for this?
 const isGoogleOAuthEnabled = computed(() => config.public.enableGoogleOauth === 'true')
 const hasOAuthProvider = computed(() => isGoogleOAuthEnabled.value)
 
+// watch for user changes and redirect if authenticated
 watch(
   user,
   async (currentUser) => {
@@ -34,6 +38,7 @@ watch(
   { immediate: true }
 )
 
+// authentication methods
 const submitCredentials = async () => {
   isSubmitting.value = true
 
