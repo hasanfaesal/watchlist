@@ -1,0 +1,7 @@
+<template>
+  <div class="bg-default flex min-h-screen items-center justify-center px-4 py-8">
+    <div class="w-full max-w-md">
+      <slot />
+    </div>
+  </div>
+</template>
