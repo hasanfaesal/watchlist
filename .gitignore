@@ -24,4 +24,6 @@ logs
 !.env.example
 
 # GitHub configuration
-.github
+.github/*
+!.github/workflows/
+!.github/workflows/**
