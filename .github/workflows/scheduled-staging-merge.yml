@@ -1,0 +1,40 @@
+name: Scheduled staging -> main merge
+
+on:
+  schedule:
+    - cron: '30 19 * * *' # 00:30 PKT (UTC+5)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  merge-staging-into-main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Guard for target date in PKT
+        run: |
+          target_date='2026-02-18'
+          current_date=$(TZ='Asia/Karachi' date +%F)
+          echo "PKT date is: $current_date"
+          if [ "$current_date" != "$target_date" ]; then
+            echo "Not target date ($target_date). Exiting without merge."
+            exit 0
+          fi
+
+      - name: Configure Git
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Fast-forward main from staging
+        run: |
+          git fetch origin main staging
+          git checkout main
+          git merge --ff-only origin/staging
+          git push origin main
