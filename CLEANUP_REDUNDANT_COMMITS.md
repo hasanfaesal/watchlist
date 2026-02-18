@@ -41,9 +41,21 @@ The final state is verified to be identical:
 - Original `a096cec` tree SHA: `6d4ecdb71316a61a4aebdbc2edf3faff12a50d58`
 - Cleaned `cdf7c90` tree SHA: `6d4ecdb71316a61a4aebdbc2edf3faff12a50d58` ✓
 
-## How to Apply This Cleanup (Manual Steps)
+## How to Apply This Cleanup
 
-Since force push is not available in this environment, the repository owner should apply these steps locally:
+### Option A: Automated Script (Recommended)
+
+Run the provided cleanup script:
+
+```bash
+# Make the script executable and run it
+chmod +x cleanup-commits.sh
+./cleanup-commits.sh
+```
+
+### Option B: Manual Steps
+
+If you prefer to do it manually, the repository owner should apply these steps locally:
 
 ```bash
 # 1. Fetch the branch
@@ -60,7 +72,7 @@ git cherry-pick a096cec
 
 # 5. Verify the result
 git log --oneline --graph -8
-git diff origin/copilot/fix-redundant-merge-strategy  # Should show no differences
+git diff HEAD origin/copilot/fix-redundant-merge-strategy -- ':(exclude)CLEANUP_REDUNDANT_COMMITS.md' ':(exclude)cleanup-commits.sh'
 
 # 6. Force push to update the PR
 git push --force-with-lease origin cleanup-merge-commits:copilot/fix-redundant-merge-strategy
