@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
   const season = requireNumericParam(event, 'season')
 
   const response = await useTmdbFetch<{
-    id: string
+    id: number
     season_number: number
     episodes?: Array<{
       id: number
