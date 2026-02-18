@@ -34,7 +34,7 @@ git fetch origin copilot/fix-redundant-merge-strategy
 echo ""
 
 # Create a backup branch
-BACKUP_BRANCH="backup-before-cleanup-$(date +%Y%m%d-%H%M%S)"
+BACKUP_BRANCH="backup-before-cleanup-$(date -u +%Y%m%d%H%M%S)"
 echo "Creating backup branch: $BACKUP_BRANCH"
 git branch $BACKUP_BRANCH
 echo -e "${GREEN}✓ Backup created${NC}"
@@ -78,7 +78,7 @@ echo ""
 ORIGINAL_TREE=$(git rev-parse a096cec^{tree})
 NEW_TREE=$(git rev-parse HEAD^{tree})
 
-if [ "$ORIGINAL_TREE" == "$NEW_TREE" ]; then
+if [ "$ORIGINAL_TREE" = "$NEW_TREE" ]; then
     echo -e "${GREEN}✓ Verification successful: Tree state matches original${NC}"
     echo "  Original tree: $ORIGINAL_TREE"
     echo "  New tree:      $NEW_TREE"
@@ -95,7 +95,7 @@ echo "This will rewrite the branch history on origin."
 echo ""
 read -p "Do you want to proceed with force push? (yes/no): " CONFIRM
 
-if [ "$CONFIRM" == "yes" ]; then
+if [ "$CONFIRM" = "yes" ]; then
     echo ""
     echo "Force pushing cleaned history..."
     if git push --force-with-lease origin copilot/fix-redundant-merge-strategy; then
