@@ -3,6 +3,8 @@
 # Cleanup Script for Redundant Merge Commits
 # This script removes empty "Initial plan" commits and redundant merge commits
 # from the copilot/fix-redundant-merge-strategy branch
+#
+# Requirements: bash, git
 
 set -e  # Exit on error
 
